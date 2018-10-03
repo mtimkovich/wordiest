@@ -18,6 +18,16 @@ type Tile struct {
 	wordMul   int // word multiplier
 }
 
+func (t *Tile) Print() {
+	if t.letterMul != 1 {
+		fmt.Printf("%v%v%v\n", t.letter, t.letterMul, "l")
+	} else if t.wordMul != 1 {
+		fmt.Printf("%v%v%v\n", t.letter, t.wordMul, "w")
+	} else {
+		fmt.Println(t.letter)
+	}
+}
+
 func letterValue(letter string) int {
 	values := map[string]int{
 		"d": 2, "g": 2,
@@ -35,7 +45,7 @@ func letterValue(letter string) int {
 	}
 }
 
-func NewTile(input string) *Tile {
+func NewTile(input string) (*Tile, error) {
 	t := &Tile{}
 	t.letterMul = 1
 	t.wordMul = 1
@@ -50,7 +60,7 @@ func NewTile(input string) *Tile {
 		t.letter = string(input[0])
 		mul, err := strconv.Atoi(string(input[1]))
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 
 		if input[2] == 'l' {
@@ -58,21 +68,25 @@ func NewTile(input string) *Tile {
 		} else if input[2] == 'w' {
 			t.wordMul = mul
 		} else {
-			log.Fatal("Invalid input: " + input)
+			return nil, fmt.Errorf("Invalid input: %v", input)
 		}
 	} else {
-		log.Fatal("Invalid input: " + input)
+		return nil, fmt.Errorf("Invalid input: %v", input)
 	}
 
 	t.letterVal = letterValue(t.letter)
-	return t
+	return t, nil
 }
 
 func makeTiles(input string) []*Tile {
 	var tiles []*Tile
 	split := strings.Split(input, " ")
 	for _, s := range split {
-		tiles = append(tiles, NewTile(s))
+		tile, err := NewTile(s)
+		if err != nil {
+			log.Fatal(err)
+		}
+		tiles = append(tiles, tile)
 	}
 
 	return tiles
