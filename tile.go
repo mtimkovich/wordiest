@@ -74,10 +74,11 @@ func NewTile(input string) (*Tile, error) {
 	return t, nil
 }
 
-func makeTiles(input string) []*Tile {
+func makeTiles(inputs []string) []*Tile {
 	var tiles []*Tile
-	split := strings.Split(input, " ")
-	for _, s := range split {
+
+	for _, s := range inputs {
+		s = strings.ToLower(s)
 		tile, err := NewTile(s)
 		if err != nil {
 			log.Fatal(err)

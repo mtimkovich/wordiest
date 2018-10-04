@@ -13,13 +13,20 @@ import (
 
 var wordTrie *trie.Trie
 
-func sortString(s string) string {
-	split := strings.Split(s, "")
-	sort.Strings(split)
-	return strings.Join(split, "")
+type RuneSlice []rune
+
+func (p RuneSlice) Len() int           { return len(p) }
+func (p RuneSlice) Less(i, j int) bool { return p[i] < p[j] }
+func (p RuneSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+
+// Return the letters of a string in sorted order.
+func sorted(s string) string {
+	runes := []rune(s)
+	sort.Sort(RuneSlice(runes))
+	return string(runes)
 }
 
-// Read valid words into global trie
+// Read all English words into the global trie.
 func loadWords() {
 	file, err := os.Open("sowpods.txt")
 	if err != nil {
@@ -32,18 +39,31 @@ func loadWords() {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		word := strings.ToLower(scanner.Text())
-		signature := sortString(word)
+		signature := sorted(word)
+		// The trie stores the word at the leaf of its sorted letters.
 		wordTrie.Add(signature, word)
 	}
 }
 
 func main() {
-	loadWords()
-	// argv := "t e g5w o o l2l t i p o2l u d a n2w"
-	argv := "t e g5w"
+	// if len(os.Args) < 2 {
+	// 	fmt.Println("Usage:", os.Args[0], "[a] [a2l] [a3w]")
+	// 	fmt.Println("  - a: [a-z]")
+	// 	fmt.Println("  - [1-9]: multiplier")
+	// 	fmt.Println("  - l: letter multiplier")
+	// 	fmt.Println("  - w: word multiplier")
+	// 	os.Exit(0)
+	// }
 
-	tiles := makeTiles(argv)
+	// args := os.Args[1:]
+	// argsStr := "t e g5w o o l2l t i p o2l u d a n2w"
+	argsStr := "t e g5w"
+	args := strings.Split(argsStr, " ")
+
+	tiles := makeTiles(args)
 	for _, tile := range tiles {
 		fmt.Println(tile)
 	}
+
+	loadWords()
 }
