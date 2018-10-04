@@ -14,6 +14,10 @@ type Tile struct {
 	wordMul   int // word multiplier
 }
 
+func (t *Tile) TileScore() int {
+	return t.letterVal * t.letterMul
+}
+
 func (t *Tile) Print() {
 	if t.letterMul != 1 {
 		fmt.Printf("%v%v%v\n", t.letter, t.letterMul, "l")

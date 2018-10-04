@@ -56,14 +56,23 @@ func main() {
 	// }
 
 	// args := os.Args[1:]
-	// argsStr := "t e g5w o o l2l t i p o2l u d a n2w"
-	argsStr := "t e g5w"
+	argsStr := "t e g5w o o l2l t i p o2l u d a n2w"
 	args := strings.Split(argsStr, " ")
+	fmt.Println(args)
 
 	tiles := makeTiles(args)
+
+	sort.Slice(tiles, func(i, j int) bool {
+		if tiles[i].wordMul == tiles[j].wordMul {
+			return tiles[i].TileScore() > tiles[j].TileScore()
+		}
+
+		return tiles[i].wordMul > tiles[j].wordMul
+	})
+
 	for _, tile := range tiles {
 		fmt.Println(tile)
 	}
 
-	loadWords()
+	// loadWords()
 }
