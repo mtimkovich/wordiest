@@ -8,34 +8,34 @@ import (
 )
 
 type Tile struct {
-	letter    string
-	letterVal int // how much this letter is worth
-	letterMul int // letter multiplier
-	wordMul   int // word multiplier
+	Letter    byte
+	LetterVal int // how much this letter is worth
+	LetterMul int // letter multiplier
+	WordMul   int // word multiplier
 }
 
 func (t *Tile) TileScore() int {
-	return t.letterVal * t.letterMul
+	return t.LetterVal * t.LetterMul
 }
 
-func (t *Tile) Print() {
-	if t.letterMul != 1 {
-		fmt.Printf("%v%v%v\n", t.letter, t.letterMul, "l")
-	} else if t.wordMul != 1 {
-		fmt.Printf("%v%v%v\n", t.letter, t.wordMul, "w")
+func (t *Tile) String() string {
+	if t.LetterMul != 1 {
+		return fmt.Sprintf("%c%v%v", t.Letter, t.LetterMul, "l")
+	} else if t.WordMul != 1 {
+		return fmt.Sprintf("%c%v%v", t.Letter, t.WordMul, "w")
 	} else {
-		fmt.Println(t.letter)
+		return fmt.Sprintf("%c", t.Letter)
 	}
 }
 
-func letterValue(letter string) int {
-	values := map[string]int{
-		"d": 2, "g": 2,
-		"c": 3, "m": 3, "b": 3, "p": 3,
-		"h": 4, "f": 4, "w": 4, "y": 4, "v": 4,
-		"k": 5,
-		"j": 8, "x": 8,
-		"q": 10, "z": 10,
+func letterValue(letter byte) int {
+	values := map[byte]int{
+		'd': 2, 'g': 2,
+		'c': 3, 'm': 3, 'b': 3, 'p': 3,
+		'h': 4, 'f': 4, 'w': 4, 'y': 4, 'v': 4,
+		'k': 5,
+		'j': 8, 'x': 8,
+		'q': 10, 'z': 10,
 	}
 
 	if val, ok := values[letter]; ok {
@@ -47,26 +47,26 @@ func letterValue(letter string) int {
 
 func NewTile(input string) (*Tile, error) {
 	t := &Tile{}
-	t.letterMul = 1
-	t.wordMul = 1
+	t.LetterMul = 1
+	t.WordMul = 1
 
 	// Parse
 	if len(input) == 1 {
-		t.letter = input
+		t.Letter = input[0]
 	} else if len(input) == 3 {
 		// input[0] is letter
 		// input[1] is multiplier value
 		// input[2] is type of multiplier
-		t.letter = string(input[0])
+		t.Letter = input[0]
 		mul, err := strconv.Atoi(string(input[1]))
 		if err != nil {
 			return nil, err
 		}
 
 		if input[2] == 'l' {
-			t.letterMul = mul
+			t.LetterMul = mul
 		} else if input[2] == 'w' {
-			t.wordMul = mul
+			t.WordMul = mul
 		} else {
 			return nil, fmt.Errorf("Invalid input: %v", input)
 		}
@@ -74,12 +74,70 @@ func NewTile(input string) (*Tile, error) {
 		return nil, fmt.Errorf("Invalid input: %v", input)
 	}
 
-	t.letterVal = letterValue(t.letter)
+	t.LetterVal = letterValue(t.Letter)
 	return t, nil
 }
 
-func makeTiles(inputs []string) []*Tile {
-	var tiles []*Tile
+type Tiles []*Tile
+
+func (tiles Tiles) Contains(word string) (used, remaining Tiles, match bool) {
+    remaining = append(remaining, tiles...)
+
+    if len(word) > len(tiles) {
+        return
+    }
+
+    for _, c := range word {
+        letterMatch := false
+        for i, t := range remaining {
+            if t.Letter == byte(c) {
+                used = append(used, remaining[i])
+                remaining = append(remaining[:i], remaining[i+1:]...)
+                letterMatch = true
+                break
+            }
+        }
+
+        if !letterMatch {
+            return
+        }
+    }
+
+    match = true
+    return
+}
+
+func (t Tiles) Score() int {
+    score := 0
+    mul := 1
+
+    for _, tile := range t {
+        score += tile.LetterVal * tile.LetterMul
+        mul *= tile.WordMul
+    }
+
+    return score * mul
+}
+
+func (t Tiles) String() (output string) {
+    for _, tile := range t {
+        output += fmt.Sprintf("%c", tile.Letter)
+    }
+
+    return
+}
+
+type WordAndScore struct {
+    Word Tiles
+    Score int
+}
+
+func (w WordAndScore) String() string {
+    return fmt.Sprintf("%v (%v)", w.Word, w.Score)
+}
+
+func makeTiles(inputs []string) Tiles {
+    var tiles Tiles
 
 	for _, s := range inputs {
 		s = strings.ToLower(s)
@@ -87,7 +145,8 @@ func makeTiles(inputs []string) []*Tile {
 		if err != nil {
 			log.Fatal(err)
 		}
-		tiles = append(tiles, tile)
+
+        tiles = append(tiles, tile)
 	}
 
 	return tiles
