@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -129,6 +130,14 @@ func (t Tiles) String() (output string) {
 	return
 }
 
+func (t Tiles) Debug() (output string) {
+	for _, tile := range t {
+		output += tile.String() + " "
+	}
+
+	return
+}
+
 type WordAndScore struct {
 	Word  Tiles
 	Score int
@@ -150,6 +159,17 @@ func makeTiles(inputs []string) Tiles {
 
 		tiles = append(tiles, tile)
 	}
+
+	// Sort tiles so more powerful tiles are sorted first.
+	sort.Slice(tiles, func(i, j int) bool {
+		if tiles[i].WordMul > tiles[j].WordMul {
+			return true
+		} else if tiles[i].WordMul < tiles[j].WordMul {
+			return false
+		} else {
+			return tiles[i].LetterMul > tiles[j].LetterMul
+		}
+	})
 
 	return tiles
 }
