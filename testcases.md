@@ -11,3 +11,6 @@
 
 ### "navigable" (fixed)
     g4w i b2l d q n e a o n4w i2l a l3l v2w
+
+### "undiluted"
+    u2l i o u t d n2w i d t l d  e2l

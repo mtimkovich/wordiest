@@ -31,10 +31,11 @@ func (t *Tile) String() string {
 
 func letterValue(letter byte) int {
 	values := map[byte]int{
-		'd': 2, 'g': 2,
-		'c': 3, 'm': 3, 'b': 3, 'p': 3,
-		'h': 4, 'f': 4, 'w': 4, 'y': 4, 'v': 4,
+		'd': 2, 'n': 2, 'u': 2, 'l': 2,
+		'g': 3, 'c': 3, 'p': 3, 'h': 3,
+		'm': 4, 'b': 4, 'f': 4, 'w': 4, 'y': 4,
 		'k': 5,
+		'v': 6,
 		'j': 8, 'x': 8,
 		'q': 10, 'z': 10,
 	}
