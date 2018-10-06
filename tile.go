@@ -50,7 +50,7 @@ func NewTile(input string) (*Tile, error) {
 	t.LetterMul = 1
 	t.WordMul = 1
 
-    tileErr := fmt.Errorf("Invalid tile: %v", input)
+	tileErr := fmt.Errorf("Invalid tile: %v", input)
 
 	// Parse
 	if len(input) == 1 {
