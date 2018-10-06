@@ -19,36 +19,32 @@ func loadWords() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-    size := 0
 	for scanner.Scan() {
 		word := strings.ToLower(scanner.Text())
-        if word[0] == '#' {
-            continue
-        }
-        dictionary = append(dictionary, word)
-        size++
+		if word[0] == '#' {
+			continue
+		}
+		dictionary = append(dictionary, word)
 	}
-
-    fmt.Printf("Loaded dictionary (%v words)\n", size)
 }
 
 // Find the highest scoring word we can make with our tiles
 // Return the leftover ones.
 // TODO: Edge cases, e.g. no matches
 func solve(tiles Tiles) (WordAndScore, Tiles) {
-    highScore := WordAndScore{Tiles{}, 0}
-    var bestRemaining Tiles
+	highScore := WordAndScore{Tiles{}, 0}
+	var bestRemaining Tiles
 
-    for _, word := range dictionary {
-        if used, remaining, ok := tiles.Contains(word); ok {
-            if score := used.Score(); score > highScore.Score {
-                highScore = WordAndScore{used, score}
-                bestRemaining = remaining
-            }
-        }
-    }
+	for _, word := range dictionary {
+		if used, remaining, ok := tiles.Contains(word); ok {
+			if score := used.Score(); score > highScore.Score {
+				highScore = WordAndScore{used, score}
+				bestRemaining = remaining
+			}
+		}
+	}
 
-    return highScore, bestRemaining
+	return highScore, bestRemaining
 }
 
 func main() {
@@ -70,8 +66,8 @@ func main() {
 
 	loadWords()
 
-    word1, remainder := solve(tiles)
-    word2, _ := solve(remainder)
+	word1, remainder := solve(tiles)
+	word2, _ := solve(remainder)
 
-    fmt.Printf("%v: %v %v\n", word1.Score+word2.Score, word1, word2)
+	fmt.Printf("%v: %v + %v\n", word1.Score+word2.Score, word1, word2)
 }

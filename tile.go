@@ -81,63 +81,63 @@ func NewTile(input string) (*Tile, error) {
 type Tiles []*Tile
 
 func (tiles Tiles) Contains(word string) (used, remaining Tiles, match bool) {
-    remaining = append(remaining, tiles...)
+	remaining = append(remaining, tiles...)
 
-    if len(word) > len(tiles) {
-        return
-    }
+	if len(word) > len(tiles) {
+		return
+	}
 
-    for _, c := range word {
-        letterMatch := false
-        for i, t := range remaining {
-            if t.Letter == byte(c) {
-                used = append(used, remaining[i])
-                remaining = append(remaining[:i], remaining[i+1:]...)
-                letterMatch = true
-                break
-            }
-        }
+	for _, c := range word {
+		letterMatch := false
+		for i, t := range remaining {
+			if t.Letter == byte(c) {
+				used = append(used, remaining[i])
+				remaining = append(remaining[:i], remaining[i+1:]...)
+				letterMatch = true
+				break
+			}
+		}
 
-        if !letterMatch {
-            return
-        }
-    }
+		if !letterMatch {
+			return
+		}
+	}
 
-    match = true
-    return
+	match = true
+	return
 }
 
 func (t Tiles) Score() int {
-    score := 0
-    mul := 1
+	score := 0
+	mul := 1
 
-    for _, tile := range t {
-        score += tile.LetterVal * tile.LetterMul
-        mul *= tile.WordMul
-    }
+	for _, tile := range t {
+		score += tile.TileScore()
+		mul *= tile.WordMul
+	}
 
-    return score * mul
+	return score * mul
 }
 
 func (t Tiles) String() (output string) {
-    for _, tile := range t {
-        output += fmt.Sprintf("%c", tile.Letter)
-    }
+	for _, tile := range t {
+		output += fmt.Sprintf("%c", tile.Letter)
+	}
 
-    return
+	return
 }
 
 type WordAndScore struct {
-    Word Tiles
-    Score int
+	Word  Tiles
+	Score int
 }
 
 func (w WordAndScore) String() string {
-    return fmt.Sprintf("%v (%v)", w.Word, w.Score)
+	return fmt.Sprintf("%v (%v)", w.Word, w.Score)
 }
 
 func makeTiles(inputs []string) Tiles {
-    var tiles Tiles
+	var tiles Tiles
 
 	for _, s := range inputs {
 		s = strings.ToLower(s)
@@ -146,7 +146,7 @@ func makeTiles(inputs []string) Tiles {
 			log.Fatal(err)
 		}
 
-        tiles = append(tiles, tile)
+		tiles = append(tiles, tile)
 	}
 
 	return tiles
