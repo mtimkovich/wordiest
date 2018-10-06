@@ -50,6 +50,8 @@ func NewTile(input string) (*Tile, error) {
 	t.LetterMul = 1
 	t.WordMul = 1
 
+    tileErr := fmt.Errorf("Invalid tile: %v", input)
+
 	// Parse
 	if len(input) == 1 {
 		t.Letter = input[0]
@@ -68,10 +70,10 @@ func NewTile(input string) (*Tile, error) {
 		} else if input[2] == 'w' {
 			t.WordMul = mul
 		} else {
-			return nil, fmt.Errorf("Invalid input: %v", input)
+			return nil, tileErr
 		}
 	} else {
-		return nil, fmt.Errorf("Invalid input: %v", input)
+		return nil, tileErr
 	}
 
 	t.LetterVal = letterValue(t.Letter)
