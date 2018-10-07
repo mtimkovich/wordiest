@@ -14,3 +14,6 @@
 
 ### "undiluted" (fixed)
     u2l i o u t d n2w i d t l d  e2l
+
+### "phoneme" and "behowl"
+    e3l u o m w p l e b n2w o2

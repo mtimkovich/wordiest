@@ -1,4 +1,4 @@
-# Wordiest
+# Wordiest Solver
 
 Solver for the Android game *Wordiest*. No cheating!
 
