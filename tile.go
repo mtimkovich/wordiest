@@ -36,8 +36,8 @@ func letterValue(letter byte) int {
 		'm': 4, 'b': 4, 'f': 4, 'w': 4, 'y': 4,
 		'k': 5,
 		'v': 6,
-		'j': 8, 'x': 8,
-		'q': 10, 'z': 10,
+		'x': 8,
+		'j': 10, 'q': 10, 'z': 10,
 	}
 
 	if val, ok := values[letter]; ok {

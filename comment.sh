@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Quickly remove a word from the dictionary
-
 if [ -z "$1" ]; then
     echo "Usage: $0 [word"
 fi

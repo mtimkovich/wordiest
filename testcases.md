@@ -1,6 +1,6 @@
 # Bugs and suboptimal plays
 
-### Can't spell a second word
+### Can't spell a second word (fixed)
     e4w v e t5l n q i d2l f u i w s3w t
 
 ### Didn't find "overfar" (fixed)
@@ -12,5 +12,5 @@
 ### "navigable" (fixed)
     g4w i b2l d q n e a o n4w i2l a l3l v2w
 
-### "undiluted"
+### "undiluted" (fixed)
     u2l i o u t d n2w i d t l d  e2l

@@ -28,23 +28,60 @@ func loadWords() {
 	}
 }
 
+type Solution struct {
+	Word1 WordAndScore
+	Word2 WordAndScore
+}
+
+func (s Solution) Total() int {
+	return s.Word1.Score + s.Word2.Score
+}
+
+func (s Solution) String() string {
+	return fmt.Sprintf("%v: %v + %v", s.Total(), s.Word1, s.Word2)
+}
+
+func Solve(tiles Tiles) (solution Solution) {
+	var blacklist []string
+
+	for {
+		word1, remainder := highestWord(tiles, blacklist)
+		word2, _ := highestWord(remainder, blacklist)
+
+		if word1.Score == 0 {
+			// Oh no
+			log.Fatal("I could literally not make any words with these tiles.")
+		}
+
+		if word2.Score == 0 {
+			// Our first word is too good! Blacklist it and try to find a slightly worse word.
+			blacklist = append(blacklist, word1.Word.String())
+		} else {
+			return Solution{word1, word2}
+		}
+	}
+}
+
 // Find the highest scoring word we can make with our tiles
 // Return the leftover ones.
-// TODO: Edge cases, e.g. no matches
-func solve(tiles Tiles) (WordAndScore, Tiles) {
-	highScore := WordAndScore{Tiles{}, 0}
-	var bestRemaining Tiles
-
+func highestWord(tiles Tiles, blacklist []string) (highScore WordAndScore, remaining Tiles) {
+OUTER:
 	for _, word := range dictionary {
-		if used, remaining, ok := tiles.Contains(word); ok {
+		for _, badWord := range blacklist {
+			if word == badWord {
+				continue OUTER
+			}
+		}
+
+		if used, remainder, ok := tiles.Contains(word); ok {
 			if score := used.Score(); score > highScore.Score {
 				highScore = WordAndScore{used, score}
-				bestRemaining = remaining
+				remaining = remainder
 			}
 		}
 	}
 
-	return highScore, bestRemaining
+	return highScore, remaining
 }
 
 func main() {
@@ -58,16 +95,9 @@ func main() {
 	}
 
 	args := os.Args[1:]
-	// argsStr := "t e g5w o o l2l t i p o2l u d a n2w"
-	// args := strings.Split(argsStr, " ")
-	// fmt.Println(args)
-
 	tiles := makeTiles(args)
 
 	loadWords()
-
-	word1, remainder := solve(tiles)
-	word2, _ := solve(remainder)
-
-	fmt.Printf("%v: %v + %v\n", word1.Score+word2.Score, word1, word2)
+	solution := Solve(tiles)
+	fmt.Println(solution)
 }
