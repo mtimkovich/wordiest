@@ -12,7 +12,7 @@ var dictionary []string
 
 // Read all English words into slice
 func loadWords() {
-	file, err := os.Open("sowpods.txt")
+	file, err := os.Open("TWL06.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
