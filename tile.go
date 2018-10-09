@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"sort"
 	"strconv"
 	"strings"
@@ -158,7 +157,7 @@ func makeTiles(inputs []string) Tiles {
 	for _, s := range inputs {
 		tile, err := NewTile(s)
 		if err != nil {
-			log.Fatal(err)
+			fatal(err)
 		}
 
 		tiles = append(tiles, tile)

@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 )
@@ -14,7 +13,7 @@ var dictionary []string
 func loadWords() {
 	file, err := os.Open("TWL06.txt")
 	if err != nil {
-		log.Fatal(err)
+		fatal(err)
 	}
 	defer file.Close()
 
@@ -52,7 +51,7 @@ func Solve(tiles Tiles) *Solution {
 
 		if word1.Score == 0 {
 			// Oh no
-			log.Fatal("I could literally not make any words with these tiles.")
+			fatal("I could literally not make any words with these tiles.")
 		}
 
 		if word2.Score == 0 {
@@ -95,6 +94,11 @@ func highestWord(tiles Tiles, blacklist map[string]bool) (highScore WordAndScore
 	}
 
 	return highScore, remaining
+}
+
+func fatal(a ...interface{}) {
+	fmt.Println(a...)
+	os.Exit(1)
 }
 
 func main() {
