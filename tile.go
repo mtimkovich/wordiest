@@ -54,6 +54,8 @@ func NewTile(input string) (*Tile, error) {
 
 	tileErr := fmt.Errorf("Invalid tile: %v", input)
 
+	input = strings.ToLower(input)
+
 	// Parse
 	if len(input) == 1 {
 		t.Letter = input[0]
@@ -84,12 +86,14 @@ func NewTile(input string) (*Tile, error) {
 
 type Tiles []*Tile
 
+// See if we can construct the given word with our tiles. Return the used tiles, the
+// leftover tiles, and if we had a match.
 func (tiles Tiles) Contains(word string) (used, remaining Tiles, match bool) {
-	remaining = append(remaining, tiles...)
-
 	if len(word) > len(tiles) {
 		return
 	}
+
+	remaining = append(remaining, tiles...)
 
 	for _, c := range word {
 		letterMatch := false
@@ -152,7 +156,6 @@ func makeTiles(inputs []string) Tiles {
 	var tiles Tiles
 
 	for _, s := range inputs {
-		s = strings.ToLower(s)
 		tile, err := NewTile(s)
 		if err != nil {
 			log.Fatal(err)

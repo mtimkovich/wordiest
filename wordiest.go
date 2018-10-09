@@ -33,16 +33,18 @@ type Solution struct {
 	Word2 WordAndScore
 }
 
-func (s Solution) Total() int {
+func (s *Solution) Total() int {
 	return s.Word1.Score + s.Word2.Score
 }
 
-func (s Solution) String() string {
+func (s *Solution) String() string {
 	return fmt.Sprintf("%v: %v + %v", s.Total(), s.Word1, s.Word2)
 }
 
-func Solve(tiles Tiles) (solution Solution) {
+func Solve(tiles Tiles) *Solution {
 	var blacklist []string
+	solution := &Solution{}
+	attempts := 0
 
 	for {
 		word1, remainder := highestWord(tiles, blacklist)
@@ -57,13 +59,32 @@ func Solve(tiles Tiles) (solution Solution) {
 			// Our first word is too good! Blacklist it and try to find a slightly worse word.
 			blacklist = append(blacklist, word1.Word.String())
 		} else {
-			return Solution{word1, word2}
+			if attempts == 0 {
+				solution = &Solution{word1, word2}
+			} else {
+				newSolution := &Solution{word1, word2}
+
+				if newSolution.Total() > solution.Total() {
+					solution = newSolution
+				}
+			}
+
+			// Sometimes if the words are close in value, it's better to have 2 solid words than
+			// 1 really good word. Try 20 more times to see if we can find something better.
+			if word1.Score <= word2.Score+40 && attempts < 20 {
+				blacklist = append(blacklist, word1.Word.String())
+				blacklist = append(blacklist, word2.Word.String())
+				attempts++
+			} else {
+				return solution
+			}
 		}
 	}
 }
 
 // Find the highest scoring word we can make with our tiles
-// Return the leftover ones.
+// Return the leftover tiles. There is also a blacklist of words to ignore for various scoring
+// reasons.
 func highestWord(tiles Tiles, blacklist []string) (highScore WordAndScore, remaining Tiles) {
 OUTER:
 	for _, word := range dictionary {
