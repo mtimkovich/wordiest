@@ -42,7 +42,7 @@ func (s *Solution) String() string {
 }
 
 func Solve(tiles Tiles) *Solution {
-	var blacklist []string
+	blacklist := map[string]bool{}
 	solution := &Solution{}
 	attempts := 0
 
@@ -57,7 +57,7 @@ func Solve(tiles Tiles) *Solution {
 
 		if word2.Score == 0 {
 			// Our first word is too good! Blacklist it and try to find a slightly worse word.
-			blacklist = append(blacklist, word1.Word.String())
+			blacklist[word1.Word.String()] = true
 		} else {
 			newSolution := &Solution{word1, word2}
 
@@ -68,7 +68,7 @@ func Solve(tiles Tiles) *Solution {
 			// Sometimes if the words are close in value, it's better to have 2 solid words than
 			// 1 really good word. Try 20 more times to see if we can find something better.
 			if word1.Score <= word2.Score+40 && attempts < 20 {
-				blacklist = append(blacklist, word1.Word.String())
+				blacklist[word1.Word.String()] = true
 				attempts++
 			} else {
 				return solution
@@ -80,13 +80,10 @@ func Solve(tiles Tiles) *Solution {
 // Find the highest scoring word we can make with our tiles
 // Return the leftover tiles. There is also a blacklist of words to ignore for various scoring
 // reasons.
-func highestWord(tiles Tiles, blacklist []string) (highScore WordAndScore, remaining Tiles) {
-OUTER:
+func highestWord(tiles Tiles, blacklist map[string]bool) (highScore WordAndScore, remaining Tiles) {
 	for _, word := range dictionary {
-		for _, badWord := range blacklist {
-			if word == badWord {
-				continue OUTER
-			}
+		if _, ok := blacklist[word]; ok {
+			continue
 		}
 
 		if used, remainder, ok := tiles.Contains(word); ok {

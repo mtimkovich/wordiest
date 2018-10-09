@@ -13,7 +13,7 @@ func TestMain(m *testing.M) {
 }
 
 func getSolution(input string) *Solution {
-	tiles := makeTiles(strings.Split(input, " "))
+	tiles := makeTiles(strings.Fields(input))
 	return Solve(tiles)
 }
 
