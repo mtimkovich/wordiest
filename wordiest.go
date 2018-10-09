@@ -107,7 +107,7 @@ OUTER:
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage:", os.Args[0], "[a] [a2l] [a3w]")
+		fmt.Println("Usage:", os.Args[0], "[a a2l a3w]+")
 		fmt.Println("  - a: [a-z]")
 		fmt.Println("  - [1-9]: multiplier")
 		fmt.Println("  - l: letter multiplier")

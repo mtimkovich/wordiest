@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -11,18 +12,21 @@ func TestMain(m *testing.M) {
 	os.Exit(retCode)
 }
 
-func TestMultiplierPriority(t *testing.T) {
-	tiles := makeTiles([]string{"g4w", "i", "b2l", "d", "q", "n", "e", "a", "o", "n4w", "i2l", "a", "l3l", "v2w"})
-	solution := Solve(tiles)
+func getSolution(input string) *Solution {
+	tiles := makeTiles(strings.Split(input, " "))
+	return Solve(tiles)
+}
 
-	if solution.Total() < 950 {
+func TestMultiplierPriority(t *testing.T) {
+	solution := getSolution("c a i o o g w5w e u r2l r i2l u2w l")
+
+	if solution.Total() < 100 {
 		t.Error("Solution score too low:", solution)
 	}
 }
 
 func TestSecondWord(t *testing.T) {
-	tiles := makeTiles([]string{"e4w", "v", "e", "t5l", "n", "q", "i", "d2l", "f", "u", "i", "w", "s3w", "t"})
-	solution := Solve(tiles)
+	solution := getSolution("e4w v e t5l n q i d2l f u i w s3w t")
 
 	if solution.Word2.Score == 0 {
 		t.Error("No word for word2.")
@@ -30,8 +34,7 @@ func TestSecondWord(t *testing.T) {
 }
 
 func TestCloseWords(t *testing.T) {
-	tiles := makeTiles([]string{"n", "e2l", "z", "t", "s", "a", "s", "n", "l", "t3l", "e", "e", "e", "f"})
-	solution := Solve(tiles)
+	solution := getSolution("n e2l z t s a s n l t3l e e e f")
 
 	if solution.Total() < 30 {
 		t.Error("Did not find optimal solution:", solution)
