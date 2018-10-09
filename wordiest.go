@@ -59,21 +59,16 @@ func Solve(tiles Tiles) *Solution {
 			// Our first word is too good! Blacklist it and try to find a slightly worse word.
 			blacklist = append(blacklist, word1.Word.String())
 		} else {
-			if attempts == 0 {
-				solution = &Solution{word1, word2}
-			} else {
-				newSolution := &Solution{word1, word2}
+			newSolution := &Solution{word1, word2}
 
-				if newSolution.Total() > solution.Total() {
-					solution = newSolution
-				}
+			if newSolution.Total() > solution.Total() {
+				solution = newSolution
 			}
 
 			// Sometimes if the words are close in value, it's better to have 2 solid words than
 			// 1 really good word. Try 20 more times to see if we can find something better.
 			if word1.Score <= word2.Score+40 && attempts < 20 {
 				blacklist = append(blacklist, word1.Word.String())
-				blacklist = append(blacklist, word2.Word.String())
 				attempts++
 			} else {
 				return solution
