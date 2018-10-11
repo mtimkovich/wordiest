@@ -78,7 +78,10 @@ func highestWords(tiles Tiles, attempts int) WordAndScoreHeap {
 
 	for _, word := range dictionary {
 		if used, remaining, ok := tiles.Contains(word); ok {
-			heap.Push(&pq, &WordAndScore{used, remaining, used.Score()})
+			score := used.Score()
+			if pq.Len() == 0 || score > pq[0].Score {
+				heap.Push(&pq, &WordAndScore{used, remaining, score})
+			}
 
 			if pq.Len() > attempts {
 				heap.Pop(&pq)
