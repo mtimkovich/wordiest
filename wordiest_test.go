@@ -36,7 +36,13 @@ func TestSecondWord(t *testing.T) {
 func TestCloseWords(t *testing.T) {
 	solution := getSolution("n e2l z t s a s n l t3l e e e f")
 
-	if solution.Total() < 30 {
+	if solution.Total() < 32 {
 		t.Fatal("Did not find optimal solution:", solution)
+	}
+}
+
+func BenchmarkCloseWords(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		getSolution("n e2l z t s a s n l t3l e e e f")
 	}
 }
