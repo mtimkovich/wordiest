@@ -154,6 +154,10 @@ func makeTiles(inputs []string) Tiles {
 		tiles = append(tiles, tile)
 	}
 
+	if len(tiles) != 14 {
+		fatalf("Expected 14 tiles, got %v.\n", len(tiles))
+	}
+
 	// Sort tiles so more powerful tiles are sorted first.
 	sort.Slice(tiles, func(i, j int) bool {
 		if tiles[i].WordMul > tiles[j].WordMul {

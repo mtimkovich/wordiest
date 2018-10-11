@@ -32,6 +32,11 @@ func fatal(a ...interface{}) {
 	os.Exit(1)
 }
 
+func fatalf(format string, a ...interface{}) {
+	fmt.Printf(format, a...)
+	os.Exit(1)
+}
+
 func usage() {
 	fmt.Println("Usage:", os.Args[0], "[a a2l a3w]+")
 	fmt.Println("  - a: [a-z]")
