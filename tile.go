@@ -142,15 +142,6 @@ func (t Tiles) Debug() (output string) {
 	return
 }
 
-type WordAndScore struct {
-	Word  Tiles
-	Score int
-}
-
-func (w WordAndScore) String() string {
-	return fmt.Sprintf("%v (%v)", w.Word, w.Score)
-}
-
 func makeTiles(inputs []string) Tiles {
 	var tiles Tiles
 
