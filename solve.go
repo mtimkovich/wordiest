@@ -53,17 +53,23 @@ func Solve(tiles Tiles) *Solution {
 	const ATTEMPTS = 50
 
 	words := highestWords(tiles, ATTEMPTS)
+	queue := make(chan *Solution, ATTEMPTS)
 
 	for _, word := range words {
-		second := highestWords(word.Remaining, 1)
+		go func(word *WordAndScore) {
+			second := highestWords(word.Remaining, 1)
 
-		if second.Len() == 0 {
-			continue
-		}
+			if second.Len() > 0 {
+				queue <- &Solution{*word, *second[0]}
+			} else {
+				queue <- nil
+			}
+		}(word)
+	}
 
-		newSolution := &Solution{*word, *second[0]}
-
-		if newSolution.Total() > solution.Total() {
+	for i := 0; i < ATTEMPTS; i++ {
+		newSolution := <-queue
+		if newSolution != nil && newSolution.Total() > solution.Total() {
 			solution = newSolution
 		}
 	}
